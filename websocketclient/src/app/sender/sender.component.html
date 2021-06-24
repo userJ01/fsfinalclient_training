@@ -1,0 +1,7 @@
+<form [formGroup]="senderForm" (ngSubmit)="sendMessage()">
+    <label>ID:</label><input formControlName = "ID"/><br/>
+    <label>Message</label><input formControlName = "Message"/><br/>
+    <button type="submit">Send</button>
+
+</form>
+
