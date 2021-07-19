@@ -1,0 +1,79 @@
+<header>
+  <nav
+    class="
+      navbar navbar-expand-sm navbar-toggleable-sm navbar-light
+      bg-white
+      border-bottom
+      box-shadow
+      mb-3
+    "
+  >
+    <div style="display: none">{{ isLogin }}</div>
+    <div class="container">
+      <a class="navbar-brand" [routerLink]="['/']">IMS</a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target=".navbar-collapse"
+        aria-label="Toggle navigation"
+        [attr.aria-expanded]="isExpanded"
+        (click)="toggle()"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div
+        class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse"
+        [ngClass]="{ show: isExpanded }"
+      >
+        <ul class="navbar-nav flex-grow">
+          <li
+            *ngIf="!isLogin"
+            class="nav-item"
+            [routerLinkActive]="['link-active']"
+            [routerLinkActiveOptions]="{ exact: true }"
+          >
+            <a class="nav-link text-dark" [routerLink]="['/login']">LogIn</a>
+          </li>
+          <li
+            *ngIf="isLogin"
+            class="nav-item"
+            [routerLinkActive]="['link-active']"
+            [routerLinkActiveOptions]="{ exact: true }"
+          >
+            <a class="nav-link text-dark" href="#">Holla {{ username }}</a>
+          </li>
+          <li
+            *ngIf="isLogin"
+            class="nav-item"
+            [routerLinkActive]="['link-active']"
+            [routerLinkActiveOptions]="{ exact: true }"
+          >
+            <a class="nav-link text-dark" [routerLink]="['/documents']"
+              >Documents</a
+            >
+          </li>
+          <li
+            *ngIf="isLogin"
+            class="nav-item"
+            [routerLinkActive]="['link-active']"
+            [routerLinkActiveOptions]="{ exact: true }"
+          >
+            <a class="nav-link text-dark" [routerLink]="['/sharedocuments']"
+              >Share Document</a
+            >
+          </li>
+
+          <li
+            *ngIf="isLogin"
+            class="nav-item"
+            [routerLinkActive]="['link-active']"
+            [routerLinkActiveOptions]="{ exact: true }"
+          >
+            <a class="nav-link text-dark" [routerLink]="['/draw']">Draw</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+</header>

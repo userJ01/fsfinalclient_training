@@ -1,0 +1,52 @@
+<div class="tools">
+  <div class="row">
+    <i class="material-icons btn" (click)="clearCanvas2()" title="clear"
+      >delete</i
+    >
+    <i
+      class="material-icons btn"
+      (click)="canvasService.changeBrashSize()"
+      title="brush"
+      >brush</i
+    >
+    <i class="btn size" (click)="drawRect()" title="draw squares"></i>
+    <i
+      class="btn size"
+      [style.borderRadius.px]="8"
+      [style.marginLeft.px]="18"
+      (click)="drawCircle()"
+      title="draw circles"
+    ></i>
+
+    <input
+      type="file"
+      style="display: none"
+      #fileInput
+      (change)="importPhotoFile(fileInput)"
+      accept="image/*"
+    />
+    <i class="material-icons btn" (click)="fileInput.click()" title="add image"
+      >attach_file</i
+    >
+
+    <input
+      #colorPicker
+      type="color"
+      name="colors"
+      id="cpicker"
+      value="#000"
+      title="pick color"
+    />
+    <i class="material-icons btn" (click)="undoRedoService.undo()" title="undo"
+      >undo</i
+    >
+    <i class="material-icons btn" (click)="undoRedoService.redo()" title="redo"
+      >redo</i
+    >
+  </div>
+</div>
+<div #container class="container">
+  <img #image src="" alt="" id="" class="canvas" id="layer0" />
+  <canvas #canvas class="canvas" id="layer1"> </canvas>
+  <canvas #canvas2 class="canvas" id="layer2"> </canvas>
+</div>

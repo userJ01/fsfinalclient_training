@@ -1,0 +1,95 @@
+<p>list-document works!</p>
+
+<div class="row">
+  <div class="col-sm-4">
+    <!-- <input class= 'btn btn-outline-info' type = "button" value = "Add Document"> -->
+    <input
+      class="form-control-file"
+      type="file"
+      (change)="fileChange($event)"
+      placeholder="Upload file"
+      accept=".png,.jpeg,.jpg"
+    />
+  </div>
+</div>
+<hr />
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th>DocId</th>
+      <th>Name</th>
+      <th>Owner</th>
+      <th>Img</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let document of documents; index as i">
+      <td>{{ document.docId }}</td>
+      <td>{{ document.documentName }}</td>
+      <td>{{ document.owner }}</td>
+      <td>
+        <a routerLink="/draw" [queryParams]="{ index: i }">
+          <img
+            src="{{ document.imageUrl }}"
+            alt="{{ document.documentName }}"
+            title="{{ document.documentName }}"
+          />
+        </a>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<hr />
+<!-- <table class="table table-hover">
+    <thead>
+      <tr>
+        <th>Firstname</th>
+        <th>Lastname</th>
+        <th>Email</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>John</td>
+        <td>Doe</td>
+        <td>john@example.com</td>
+        <td>
+          <a class="" [routerLink]="['/edit']">Edit </a>
+          <a class="" href="#">Delete </a>
+        </td>
+      </tr>
+      <tr>
+        <td>Mary</td>
+        <td>Moe</td>
+        <td>mary@example.com</td>
+        <td>
+          <a class="" [routerLink]="['/edit']">Edit </a>
+          <a class="" href="#">Delete </a>
+        </td>
+      </tr>
+      <tr>
+        <td>July</td>
+        <td>Dooley</td>
+        <td>july@example.com</td>
+        <td>
+          <a class="" [routerLink]="['/edit']">Edit </a>
+          <a class="" href="#">Delete </a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  -->
+<hr />
+<br />
+<ul>
+  <li *ngFor="let product of products">
+    {{ product.name }}
+    <img
+      src="{{ product.imageUrl }}"
+      title="{{ product.name }}"
+      alt="{{ product.name }}"
+      width="100px"
+    />
+  </li>
+</ul>
