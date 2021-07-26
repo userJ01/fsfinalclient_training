@@ -9,6 +9,8 @@ export class DataCollectionService {
 
   add(item: IDocument) {
     this.data.push(item);
+    //console.log(item)
+    localStorage.setItem("_IDocument", JSON.stringify(item));
   }
 
   get(index: number) {

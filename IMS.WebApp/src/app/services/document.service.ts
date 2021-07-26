@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { Auth2Service } from 'src/app/services/auth.service';
 import {IDocument} from './../interfaces/document';
 import {environment} from "./../../environments/environment.prod";
+import { Apis } from './../services/apis.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,10 +16,9 @@ export class DocumentService {
 
     getDocuments()
     {
-    var remoteAddress =environment.apiUrl+ "api/Document/GetDocuments"                                                            // ADDRESS 
-    var httpOptions      = { headers: new HttpHeaders ({ 'Content-Type':'application/json',
-    'Access-Control-Allow-Origin':'*' }) }   // TYPE of data
-    var getData = this.httpClient.get( remoteAddress, httpOptions)                    // CERATE vaiable   
+    var endpoint =Apis.documentAPI+ "GetDocuments"                                                            // ADDRESS 
+    var httpOptions      = { headers: new HttpHeaders ({ 'Content-Type':'application/json', 'Access-Control-Allow-Origin':'*' }) }   // TYPE of data
+    var getData = this.httpClient.get( endpoint, httpOptions)                    // CERATE vaiable   
     getData.subscribe                                                                            // SENDING data 
     (
       response => {
@@ -29,6 +29,22 @@ export class DocumentService {
       },
       error    => console.log(error)
     ) ;
+    }
+
+    deleteFile(docId:any)
+    {
+      var endpoint =Apis.uploadFile+ "DeleteFile" 
+      var httpOptions = { headers: new HttpHeaders ({ 'Content-Type':'application/json','Access-Control-Allow-Origin':'*' }) } 
+      let d:any=({docId:docId,description:"",documentName:"",imageUrl:"",owner:"",quantity:""}as IDocument)
+      var getData = this.httpClient.post( endpoint, d, httpOptions)
+      getData.subscribe 
+      (
+        response => {
+          
+          console.log("deleteFile:",response)
+        },
+        error    => console.log(error)
+      ) ;
     }
 
 }

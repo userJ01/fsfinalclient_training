@@ -20,6 +20,7 @@
       <th>Name</th>
       <th>Owner</th>
       <th>Img</th>
+      <th>Actions</th>
     </tr>
   </thead>
   <tbody>
@@ -28,13 +29,14 @@
       <td>{{ document.documentName }}</td>
       <td>{{ document.owner }}</td>
       <td>
-        <a routerLink="/draw" [queryParams]="{ index: i }">
-          <img
-            src="{{ document.imageUrl }}"
-            alt="{{ document.documentName }}"
-            title="{{ document.documentName }}"
-          />
+        <a >
+          <img style="width: 50px; border: 1px red solid; border-radius: 3px;"
+          routerLink="/draw" [queryParams]="{ index: i }" src="{{ document.imageUrl }}" alt="{{ document.documentName }}" title="{{ document.documentName }}"        />
         </a>
+        </td>
+        <td>
+        <span routerLink="/draw" [queryParams]="{ index: i }" class="material-icons btn"  title="Edit"> brush  </span>
+        <span class="material-icons btn" (click)="this.deleteFile( document.docId)"  title="clear"> delete  </span>
       </td>
     </tr>
   </tbody>

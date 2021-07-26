@@ -1,12 +1,7 @@
 import { ReadVarExpr, ThrowStmt } from '@angular/compiler';
-import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  OnInit,
-  ViewChild,
+import {  AfterViewInit,  Component,  ElementRef,  OnInit,  ViewChild,
 } from '@angular/core';
-import { buffer, map } from 'rxjs/operators';
+import { buffer, map, timeout } from 'rxjs/operators';
 import { fromEvent, Observable, Subject } from 'rxjs';
 import { CanvasService } from 'src/app/services/canvas.service';
 import { UndoRedoService } from 'src/app/services/undo-redo.service';
@@ -15,7 +10,9 @@ import { DataCollectionService } from 'src/app/services/datacollection.service';
 import { ImageService } from 'src/app/services/image.service';
 import { ActivatedRoute, Params } from '@angular/router';
 import { IDocument } from 'src/app/interfaces/document';
-import {environment} from "./../../../environments/environment.prod";
+import { IDocumentMarkers,IDocumentMarkerss } from 'src/app/interfaces/documentMarkers';
+import{MarkersService} from "./../../services/markers.service";
+import { Apis } from '../../services/apis.service';
 
 @Component({
   selector: 'app-image-canvas',
@@ -38,7 +35,7 @@ export class ImageCanvasComponent implements OnInit, AfterViewInit {
   lastX: number;
   lastY: number;
   data: IDocument;
-
+  marks: IDocumentMarkers[];
   constructor(
     public canvasService: CanvasService,
     public undoRedoService: UndoRedoService,
@@ -46,12 +43,24 @@ export class ImageCanvasComponent implements OnInit, AfterViewInit {
     public route: ActivatedRoute,
     public dataCollectionService: DataCollectionService,
     public imageService: ImageService
+    ,public ms:MarkersService
   ) {}
 
   ngOnInit(): void {
     this.route.queryParams.subscribe((queryParams: Params) => {
+      if(queryParams['index']===undefined)
+        return;
       this.data = this.dataCollectionService.get(queryParams['index']);
+
+      if(this.data!==undefined)
+        this.marks= this.ms.getMarks(this.data.docId) as IDocumentMarkers[];
+      else
+      {
+        let temp:any= localStorage.getItem('_IDocument');
+        this.data=(JSON.parse(temp) as IDocument)
+      }
     });
+    //console.log(this.data)
   }
 
   ngAfterViewInit(): void {
@@ -70,6 +79,8 @@ export class ImageCanvasComponent implements OnInit, AfterViewInit {
     );
     this.loadImage(this.data);
 
+
+    
     this.canvasService.mouseDown$.subscribe((event) => {
       this.lastX = event.offsetX;
       this.lastY = event.offsetY;
@@ -107,16 +118,75 @@ export class ImageCanvasComponent implements OnInit, AfterViewInit {
       let color = this.canvasService.getCurrentColor();
       this.clearCanvas();
       this.draw(x, y, radius, color);
+      /** */
+      this.savePoints(x, y, radius, color);
+      /** */
       this.undoRedoService.save();
     });
+
+    // this.canvasService.drawPoints$.subscribe((event)=>{
+    //   debugger;
+    //   //this.drawData()
+    // }
+    // );
+
+    this.drawData();
   }
 
+  /**
+   * Going Save to server 
+   * @param x 
+   * @param y 
+   * @param radius 
+   * @param color 
+   */
+  savePoints(x:any, y:any, radius:any, color:any)
+  {
+      let idm:IDocumentMarkers={documentId: this.data.docId,markerType:this.currentShape,
+        foregroundForColor:color,markerLocation:[x,y,radius].join(","),
+        backgroundForColor:"none",userCreatedTheMarker:this.data.owner};
+      //console.log("x:",x,"y:", y,"radius", radius,"color:", color,"Shape:",this.currentShape);
+      console.log("savePoints idm:",idm);
+      this.ms.saveMark(idm);
+  }
+
+  drawData()
+  {
+    //debugger;
+    if(this.marks===undefined)
+      this.marks= this.ms.getMarks(this.data.docId) as IDocumentMarkers[];
+
+    //this.canvasService.poly$.subscribe((xyarray) => {
+      for (let index = 0; index < (this.marks?.length-1); index++)
+      {
+        const element = this.marks[index];
+        let mll=element.markerLocation.toString();
+        let ml=mll.split(',')
+        let x=parseInt( ml[0])
+        let y=parseInt(ml[1])
+        let radius=parseInt( ml[2])
+        this.currentShape=element.markerType
+        this.geoService.findDrawParameters(
+          new Array<number[]>(),
+          element.markerType
+        );
+        this.draw(x, y, radius, element.foregroundForColor);
+      }
+    //});
+  }
+
+  
+
   loadImage(document: IDocument) {
-   var endpoint= environment.apiUrl+`api/Document/GetImage/${document.docId}`
-    this.imageService.loadImageToImg(
-      endpoint,
-      this.image
-    );
+    if(document!==undefined)
+    {
+      var endpoint= Apis.documentAPI +`GetImage/${document.docId}`
+     //var endpoint= document.imageUrl
+      this.imageService.loadImageToImg(
+        endpoint,
+        this.image
+      );
+    }
   }
 
   ngOnDestroy() {
@@ -182,6 +252,10 @@ export class ImageCanvasComponent implements OnInit, AfterViewInit {
 
   clearCanvas2() {
     this.ctx2.clearRect(0, 0, this.clientRect.width, this.clientRect.height);
+
+    let idm:IDocumentMarkers={documentId: this.data.docId,userCreatedTheMarker:this.data.owner,backgroundForColor:"",foregroundForColor:"",markerLocation:"",markerType:""};
+    console.log("delete idm:",idm);
+    this.ms.deleteMarkers(idm);
   }
 
   hideImage() {

@@ -1,8 +1,12 @@
 export interface IDocumentMarkers {
-    DocId:any
-    ,MarkerType:any
-    ,MarkerLocation:any
-    ,BackgroundColor:any
-    ,ForegroundColor:any
-    ,UserCreatedTheMarker:any
+    documentId:any
+    ,markerType:any
+    ,markerLocation:string
+    ,backgroundForColor:any
+    ,foregroundForColor:any
+    ,userCreatedTheMarker:any
+   
+}
+export interface IDocumentMarkerss {
+    result:IDocumentMarkers[]
 }

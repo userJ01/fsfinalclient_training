@@ -3,8 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Auth2Service } from '../services/auth.service';
 import { Router } from '@angular/router';
 import {IUser} from "./../interfaces/user";
-import {environment} from "./../../environments/environment.prod";
-
+import { Apis } from '../services/apis.service';
 @Injectable({
   providedIn: 'root'
 })
@@ -21,11 +20,11 @@ export class UserService {
     // console.log(userData.value)         
     
     console.log("comm-service: RegisterUserComm()" )
-    var remoteAddress =environment.apiUrl+ "api/User/Register"                                                            // ADDRESS 
+    var endpoint =(Apis.userAPI+ "Register" )                                                           // ADDRESS 
     var httpOptions      = { headers: new HttpHeaders ({ 'Content-Type':'application/json',
     'Access-Control-Allow-Origin':'*' }) }   // TYPE of data
     console.log("userData:",userData.value)
-    var postData = this.httpClient.post( remoteAddress, userData.value, httpOptions)                    // CERATE vaiable   
+    var postData = this.httpClient.post( endpoint, userData.value, httpOptions)                    // CERATE vaiable   
     postData.subscribe                                                                            // SENDING data 
     (
       response => console.log(response),
@@ -37,10 +36,10 @@ export class UserService {
   LogInUserComm(userData:any)
   {
     console.log("loginService",userData.value)
-    var remoteAddress =environment.apiUrl+ "api/User/SingIn"                                                            // ADDRESS 
+    var endpoint =(Apis.userAPI+ "SingIn")                                                            // ADDRESS 
     var httpOptions      = { headers: new HttpHeaders ({ 'Content-Type':'application/json; charset=utf8',
     'Access-Control-Allow-Origin':'*'  }) }   // TYPE of data
-    var postData = this.httpClient.post( remoteAddress, userData, httpOptions)                    // CERATE vaiable   
+    var postData = this.httpClient.post( endpoint, userData, httpOptions)                    // CERATE vaiable   
     postData.subscribe                                                                            // SENDING data 
     (
       response => {console.log(response)
@@ -50,7 +49,7 @@ export class UserService {
           this.user=response as IUser;
           this._auth.setDataInLocalStorage('userData', this.user);//JSON.stringify(response));
          // this._auth.setDataInLocalStorage('token', response.token);
-          this._router.navigate(['']);
+         this._router.navigate(['/']);// this._router.navigate(['']);
         } else {  }
       },
       error    => console.log(error)

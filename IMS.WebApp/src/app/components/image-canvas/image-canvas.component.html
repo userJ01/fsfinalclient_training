@@ -37,16 +37,18 @@
       value="#000"
       title="pick color"
     />
-    <i class="material-icons btn" (click)="undoRedoService.undo()" title="undo"
+    <i class="material-icons btn" (click)="undoRedoService.undo(this.data.docId)" title="undo"
       >undo</i
     >
-    <i class="material-icons btn" (click)="undoRedoService.redo()" title="redo"
+    <i class="material-icons btn" (click)="undoRedoService.redo(this.data.docId)" title="redo"
       >redo</i
     >
+    
+    <span class="material-icons btn" (click)="drawData()" title="Load Points"> autorenew  </span>
   </div>
 </div>
 <div #container class="container">
-  <img #image src="" alt="" id="" class="canvas" id="layer0" />
+  <img #image src="" alt="" id="" class="canvas" id="layer0"  />
   <canvas #canvas class="canvas" id="layer1"> </canvas>
   <canvas #canvas2 class="canvas" id="layer2"> </canvas>
 </div>

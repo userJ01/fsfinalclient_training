@@ -12,6 +12,8 @@ export class CanvasService {
   xy$: Subject<any>;
   poly$: Observable<any>;
   colorChange: Observable<any>;
+  drawPoints$: Observable<any>;
+
 
   currentShape = 'circle';
   height: number;
@@ -31,6 +33,8 @@ export class CanvasService {
     this.mouseMove$ = fromEvent(canvas.nativeElement, 'mousemove');
     this.mouseUp$ = fromEvent(canvas.nativeElement, 'mouseup');
 
+    this.drawPoints$ = fromEvent(canvas.nativeElement, 'complete');
+
     this.colorChange.subscribe((event) => {
       this.changeColor(event.target.value);
     });
@@ -42,8 +46,11 @@ export class CanvasService {
       ])
     );
 
+    this.poly$ =this.xy$.pipe(buffer(this.drawPoints$));
     // Collect all points (polygon)
     this.poly$ = this.xy$.pipe(buffer(this.mouseUp$));
+
+
   }
 
   setLastXY(lastX: number, lastY: number) {
